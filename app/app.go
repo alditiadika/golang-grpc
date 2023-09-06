@@ -1,6 +1,7 @@
 package app
 
 import (
+	"golang-grpc/app/master-data/role"
 	"golang-grpc/app/master-data/user"
 	"golang-grpc/config"
 
@@ -16,6 +17,7 @@ var Server *serverApp
 
 func (s *serverApp) Register() {
 	user.Register(s.Service)
+	role.Register(s.Service)
 }
 
 func (s *serverApp) New() {

@@ -50,44 +50,39 @@ if [ "$cmd" == "sqlc" ]; then
     last_segment=$(basename "$path")_sql
     # If sqlc.yaml doesn't exist, create it using the provided arguments
     cat <<EOF > "$path/sqlc/sqlc.yaml"
-version: "1"
-project:
-    id: ""
-packages: [
-    {
-        name: "$last_segment",
-        path: ".",
-        queries: "queries.sql",
-        schema: "schema.sql",
-        engine: "postgresql",
-        emit_prepared_queries: true,
-        emit_interface: false,
-        emit_exact_table_names: false,
-        emit_empty_slices: false,
-        emit_exported_queries: false,
-        emit_json_tags: true,
-        emit_result_struct_pointers: false,
-        emit_params_struct_pointers: false,
-        emit_methods_with_db_argument: false,
-        emit_enum_valid_method: false,
-        emit_all_enum_values: false,
-        json_tags_case_style: "pascal",
-        output_db_file_name: "db.go",
-        output_models_file_name: "models.go",
-    }
-]
+      version: "1"
+      project:
+          id: ""
+      packages: [
+          {
+              name: "$last_segment",
+              path: ".",
+              queries: "queries.sql",
+              schema: "schema.sql",
+              engine: "postgresql",
+              emit_prepared_queries: true,
+              emit_interface: false,
+              emit_exact_table_names: false,
+              emit_empty_slices: false,
+              emit_exported_queries: false,
+              emit_json_tags: true,
+              emit_result_struct_pointers: false,
+              emit_params_struct_pointers: false,
+              emit_methods_with_db_argument: false,
+              emit_enum_valid_method: false,
+              emit_all_enum_values: false,
+              json_tags_case_style: "pascal",
+              output_db_file_name: "db.go",
+              output_models_file_name: "models.go",
+          }
+      ]
 EOF
     echo "sqlc.yaml file created, generating the sqlc"
-    sqlc generate -f $path/sqlc/sqlc.yaml
-    echo "sqlc generated on $path/sqlc"
   elif [ -f "$path/sqlc/sqlc.yaml" ]; then
     echo "generating the sqlc"
-    sqlc generate -f $path/sqlc/sqlc.yaml
-    echo "sqlc generated on $path/sqlc"
-  else
-    echo "command not exist"
-    exit 1
   fi
+  sqlc generate -f $path/sqlc/sqlc.yaml
+  echo "sqlc generated on $path/sqlc"
 elif [ "$cmd" == "proto" ]; then
   if [ -z "$path" ]; then
     echo "Error: --path arguments must be filled."
@@ -119,13 +114,13 @@ elif [ "$cmd" == "init" ]; then
 	go install google.golang.org/protobuf/cmd/protoc-gen-go
 	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 	go get go-micro.dev/v4/registry/cache@v4.4.0
-  docker run -d \
-    --name postgres-container \
-    -e POSTGRES_USER=user \
-    -e POSTGRES_PASSWORD=P@ssw0rd \
-    -e POSTGRES_DB=go_grpc \
-    -p 6543:5432 \
-    postgres:11.1-alpine
+  # docker run -d \
+  #   --name postgres-container \
+  #   -e POSTGRES_USER=user \
+  #   -e POSTGRES_PASSWORD=P@ssw0rd \
+  #   -e POSTGRES_DB=go_grpc \
+  #   -p 6543:5432 \
+  #   postgres:11.1-alpine
 
 else
   echo "Error: Unknown command '$cmd'. Supported commands are 'sqlc', 'init' and 'proto'."

@@ -11,13 +11,10 @@ type handler struct {
 	usecase *usecase
 }
 
-var userHandler *handler
-
 func Register(service micro.Service) {
-	userHandler = &handler{
+	user_proto.RegisterUserServiceHandler(service.Server(), &handler{
 		usecase: NewUserUsecase(),
-	}
-	user_proto.RegisterUserServiceHandler(service.Server(), userHandler)
+	})
 }
 func (h *handler) GetAllUser(ctx context.Context, req *user_proto.GetAllUserRequest, res *user_proto.GetAllUserResponse) error {
 	return h.usecase.GetAllUser(ctx, req, res)
